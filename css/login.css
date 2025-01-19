@@ -16,7 +16,7 @@
     height: 800px;
     width: 70%;
     background-color: black;
-    background-image: url("heroimg.jpg");
+    background-image: url("../images/heroimg.jpg");
     background-size: cover;
     background-repeat: no-repeat;
 }
@@ -73,7 +73,7 @@ input[type=password] {
     justify-content: center;
     
 }
-.button1{
+button{
     margin-top: 20px;
     height: 45px;
     border-radius: 200px;
@@ -84,7 +84,7 @@ input[type=password] {
     font-weight: 500;
     font-size: 14px;
 }
-.button1:hover{
+button:hover{
     background-color:rgb(255, 255, 255);
     border: 2px solid blue;
     color:blue;
