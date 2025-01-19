@@ -1,0 +1,192 @@
+*{
+    margin: 0;
+    padding:0;
+    box-sizing: border-box;
+}
+
+/* Copy From Here */
+
+.products{
+    width: 100%;
+    height: 832px;
+    background-color: rgb(255, 255, 255);
+    display: flex;
+    justify-content: space-between;
+}
+.product-imgbg{
+    width: 700px;
+    height: 550px;
+    background-color: #F5F5F5; 
+    border-radius:10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin:50px;
+}
+.product-img{
+    width: 300px;
+    height: 400px;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+.products-info{
+    margin: 150px 150px;
+    /* display: flex;
+    justify-content: center;
+    align-items: center; */
+}
+.product-name{
+    font-size: 24px;
+    font-weight: 600;
+    font-family: Arial;
+}
+.product-review{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+    width: 250px;
+}
+.product-star{
+    height:20px;
+    width: 145px;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+.product-price{
+    width: 200px;
+    height: 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+}
+
+.product-price-cancel{
+    text-decoration: line-through;
+    font-size: 20px;
+}
+.product-price-correct {
+    font-size: 24px;
+    margin-right: 30px;
+}
+
+
+.color-selection {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.color-selection label {
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+input[type="radio"] {
+    display: none;
+}
+
+.color-circle {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1px solid black;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.color-circle.blue {
+    background-color: #a0c4ff;
+}
+
+.color-circle.red {
+    background-color: #ff6b6b;
+}
+
+input[type="radio"]:checked + .color-circle {
+
+    border: 3px solid rgb(45, 45, 45);
+}
+
+.quantity-container {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 120px; /* Adjust the width as needed */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+input[type=number] {
+    width: 60px; /* Adjust width as needed */
+    height: 40px; /* Adjust height as needed */
+    text-align: center;
+    border: none;
+    font-size: 16px;
+    outline: none;
+}
+
+button {
+    /* margin: 5px; */
+    width:30px;
+    height: 40px; /* Same height as input for perfect alignment */
+    background-color: blue; /* Red background */
+    color: white;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+}
+
+.minus-btn {
+    background-color: #f5f5f5; /* Grey background for minus button */
+}
+
+button:hover {
+    opacity: 0.8;
+}
+
+.button1{
+        margin-top: 20px;
+        height: 45px;
+        border-radius: 200px;
+        width: 180px;
+        background-color:blue;
+        border: 2px solid blue;
+        color: rgb(255, 255, 255);
+        font-weight: 500;
+        font-size: 14px;
+    }
+    .button1:hover{
+        background-color:rgb(255, 255, 255);
+        border: 2px solid blue;
+        color:blue;
+        transition-duration: 1000ms;
+    }
+
+    .tag-con{
+        display: flex;
+        justify-content: start;
+        /* padding: 20px; */
+        padding-bottom: 10px;
+        margin-top:20px;
+    }
+    .tag-text{
+        font-size: 12px;
+        color: white;
+    }
+    .tag{
+        height: 25px;
+        width: 80px;
+        background-color: orangered;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius:15px;
+    }

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details</title>
+    <link rel="stylesheet" href="../css/pd.css">
+</head>
+<body>
+    <div class="products">
+        <div class="product-imgbg">
+            <div class="product-img" style="background-image: url('../images/PD1.png');"></div>
+        </div>
+        <div class="products-info">
+            <div class="tag-con">
+                <div class="tag">
+                    <p class="tag-text">#1 Seller</p>
+                </div>
+            </div>
+            
+            <p class="product-name">Poco M6 Pro 5G(Power Black, 128 GB)</p>
+            <div class="product-review">
+                <div class="product-star" style="background-image: url('../images/star.png');"></div>
+                <p class="review-text">(2202 Reviews)</p>
+            </div>
+            <div class="product-price">
+                <p class="product-price-cancel">₹16,999</p>
+                <p class="product-price-correct">₹12,999</p>
+            </div>
+            <p class="product-hightlights">
+                4 GB RAM | 64 GB ROM | Expandable Upto 1 TB
+                17.12 cm (6.74 inch) HD+ Display
+                50MP Rear Camera | 5MP Front Camera
+                5000 mAh Battery
+                Mediatek Dimensity 6100+ Processor
+            </p>
+
+            <div class="color-selection">
+                <label for="color1">Colours:</label>
+                <input type="radio" id="color1" name="colour" value="blue" checked>
+                <label for="color1" class="color-circle blue"></label>
+                <input type="radio" id="color2" name="colour" value="red">
+                <label for="color2" class="color-circle red"></label>
+            </div>
+
+            <div class="quantity-container">
+                <button class="minus-btn" onclick="decreaseValue()">-</button>
+                <input type="number" id="quantity" value="1" min="1">
+                <button class="plus-btn" onclick="increaseValue()">+</button>
+            </div>
+            
+            <button class="button1">Buy Now</button>
+        </div>
+    </div>
+
+    <script>
+        function increaseValue() {
+            var value = parseInt(document.getElementById('quantity').value, 10);
+            value = isNaN(value) ? 0 : value;
+            value++;
+            document.getElementById('quantity').value = value;
+        }
+
+        function decreaseValue() {
+            var value = parseInt(document.getElementById('quantity').value, 10);
+            value = isNaN(value) ? 0 : value;
+            value--;
+            if (value < 1) value = 1; // Prevents going below 1
+            document.getElementById('quantity').value = value;
+        }
+    </script>
+</body>
+</html>
