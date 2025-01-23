@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body>
+    <div class="admin-container">
+        <div class="sidebar">
+            <h2>Admin Panel</h2>
+            <nav>
+                <ul>
+                    <li><button onclick="showSection('dashboard')">Dashboard</button></li>
+                    <li><button onclick="showSection('products')">Products</button></li>
+                    <li><button onclick="showSection('orders')">Orders</button></li>
+                    <li><button onclick="logout()">Logout</button></li>
+                </ul>
+            </nav>
+        </div>
+
+        <div class="main-content">
+            <!-- Dashboard Section -->
+            <div id="dashboard-section" class="admin-section">
+                <h2>Dashboard</h2>
+                <div class="analytics-grid">
+                    <div class="analytics-card">
+                        <h3>Total Products</h3>
+                        <div id="total-products" class="value">0</div>
+                    </div>
+                    <div class="analytics-card">
+                        <h3>Total Orders</h3>
+                        <div id="total-orders" class="value">0</div>
+                    </div>
+                    <div class="analytics-card">
+                        <h3>Total Revenue</h3>
+                        <div id="total-revenue" class="value">₹0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Products Section -->
+            <div id="products-section" class="admin-section">
+                <h2>Product Management</h2>
+                <button onclick="showAddProductForm()" class="submit-btn">Add New Product</button>
+                <div id="product-form" style="display: none;" class="admin-form">
+                    <h3>Add/Edit Product</h3>
+                    <form id="productForm" onsubmit="handleProductSubmit(event)">
+                        <div class="form-group">
+                            <label for="productName">Product Name</label>
+                            <input type="text" id="productName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="productPrice">Price</label>
+                            <input type="number" id="productPrice" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="productCategory">Category</label>
+                            <select id="productCategory" required>
+                                <option value="electronics">Electronics</option>
+                                <option value="fashion">Fashion</option>
+                                <option value="grocery">Grocery</option>
+                                <option value="home">Home & Furniture</option>
+                                <option value="toys">Toys & Kids</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="productImage">Image URL</label>
+                            <input type="text" id="productImage" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="productDescription">Description</label>
+                            <textarea id="productDescription" required></textarea>
+                        </div>
+                        <button type="submit" class="submit-btn">Save Product</button>
+                    </form>
+                </div>
+                <div id="products-list" class="product-grid">
+                    <!-- Products will be listed here -->
+                </div>
+            </div>
+
+            <!-- Orders Section -->
+            <div id="orders-section" class="admin-section">
+                <h2>Order Management</h2>
+                <table class="orders-table">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Customer</th>
+                            <th>Products</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="orders-list">
+                        <!-- Orders will be listed here -->
+                    </tbody>
+                </table>
+                <!-- Order Details Modal -->
+                <div id="order-details-container" class="modal">
+                    <!-- Order details will be shown here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="../js/firebase-config.js"></script>
+    <script src="../js/admin.js"></script>
+</body>
+</html> 
