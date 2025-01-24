@@ -1,105 +1,239 @@
-
 *{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
 }
-.navbar{
-    display: flex;
-    align-items: center;
-    padding: 20;
-    height: 50px;
-}
-.items {
-    background-color: #161880;
-    padding: 20px 25px;
-}
-.items a {
-    color: white; 
-}
-.items ul {
-    list-style-type: none;
-}
-.items ul li {
-    display: inline-block;
-    margin-right: 20px;
-}
-nav{
-    flex: 1;
-    text-align: center;
-}
-nav ul{
-    display: inline-block;
-    list-style-type: none;
-}
-nav ul li{
-    display: inline-block;
-    margin-right: 20px;
-}
-a{
-    text-decoration: none;
-    color: #262626;
-    margin-right: 7px;
-}
-.conatiner{
-    max-width: 1300px;
-    margin: auto;
-    padding-left: 25px;
-    padding-right: 25px;
-}
+
 
 /* product-section */
 .Doctors-Section{
-    margin-top: 50px;
-    margin-left: 50px;
-    flex-wrap: wrap;
-    display: flex;
-   
-
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+    padding: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
 }
 .section-card1{
-    height:350px;
-    width: 250px;
-    background-color: rgb(255, 255, 255);
-    border-radius: 8px;
-    text-align: center;
-    margin-left: 35px;
-    /* align-items: center; */
-    margin-bottom: 35px;
-    border: 2px solid #c5c5c5d0;
+    background: white;
+    border-radius: 5px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+}
 
-
+.section-card1:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
 .Im1{
-    background-size: cover;
-    border: none;
-    height:200px;
-    width: 250px;
-    background-color: rgb(162, 161, 161);  
-    border-radius: 8px 8px 0px 0px;
-    background-size: cover;
+    width: 100%;
+    height: 250px;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    padding: 20px;
+    transition: transform 0.3s ease;
+    background-color: #f8f9fa;
 }
-button{
-    height: 35px;
-    width: 80%;
-    background-color: rgb(29, 142, 255);
-    color: white;
-    border: none;
-    border-radius: 5px;
-    position: relative;
-    bottom: -24px;
-    
+
+.section-card1:hover .Im1 {
+    transform: scale(1.05);
 }
 
 .name{
-    font-size: 20px;
-    margin-top: 5px;
+    font-size: 1.1rem;
     font-weight: 600;
+    color: #2c3e50;
+    margin: 20px 20px 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
-.phone{
-    font-size: medium;
+
+.price {
+    padding: 0 20px;
+    margin-bottom: 20px;
+    color: #7f8c8d;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 5px;
 }
+
+.price span {
+    color: #2874f0;
+    font-weight: 600;
+    font-size: 1.2rem;
+}
+
+.section-card1 button {
+    width: calc(100% - 40px);
+    margin: 0 20px 20px;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background: #2874f0;
+    color: white;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.section-card1 button:hover {
+    background: #1c5dba;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(40, 116, 240, 0.2);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .Doctors-Section {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 15px;
+        padding: 15px;
+    }
+
+    .Im1 {
+        height: 200px;
+    }
+
+    .name {
+        font-size: 1rem;
+        margin: 15px 15px 8px;
+    }
+
+    .price {
+        padding: 0 15px;
+        margin-bottom: 15px;
+    }
+
+    .section-card1 button {
+        width: calc(100% - 30px);
+        margin: 0 15px 15px;
+        padding: 10px;
+    }
+}
+
+
 .specialist span {
     color: rgb(29, 142, 255);
+}
+
+.description {
+    padding: 0 20px;
+    margin: 10px 0;
+    color: #666;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    height: 60px; 
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
+
+/* Login Prompt Styles */
+.login-prompt {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.login-prompt-content {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    position: relative;
+    max-width: 400px;
+    width: 90%;
+}
+
+.login-prompt-content h3 {
+    margin-bottom: 15px;
+    color: #2874f0;
+}
+
+.login-prompt-content p {
+    margin-bottom: 20px;
+    color: #666;
+}
+
+.login-prompt-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.login-prompt-buttons button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.login-prompt-buttons button:first-child {
+    background: #2874f0;
+    color: white;
+}
+
+.login-prompt-buttons button:last-child {
+    background: #ff9f00;
+    color: white;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #666;
+}
+
+.close-btn:hover {
+    color: #2874f0;
+}
+
+
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #4CAF50;
+    color: white;
+    padding: 15px 25px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    z-index: 1000;
+    animation: slideIn 0.5s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
 }

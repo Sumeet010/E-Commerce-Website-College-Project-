@@ -1,85 +1,67 @@
 <!DOCTYPE html>
 <html>
     <head>
-       <title>ECOMMERCE WEBSITE</title>
-       <link rel="stylesheet" href="css/style.css">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>E-commerce</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="css/utils.css">
+        
+        <!-- Firebase Scripts -->
+        <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+        <script src="js/firebase-config.js"></script>
+        
+        
+        
+
+        <style>
+            .auth-buttons {
+                display: flex;
+                align-items: center;
+                gap: 15px;
+                margin-left: auto;
+                padding-right: 20px;
+            }
+
+            .welcome-user {
+                display: flex;
+                align-items: center;
+                gap: 15px;
+            }
+
+            .welcome-user span {
+                color: #161880;
+                font-weight: 500;
+                font-size: 15px;
+                white-space: nowrap;
+            }
+
+            .signup-btn {
+                background-color: #ff4444;
+                color: white;
+                padding: 8px 16px;  /* Reduced padding */
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-weight: 500;
+                min-width: 80px;    /* Reduced min-width */
+                transition: all 0.3s ease;
+            }
+
+            .signup-btn:hover {
+                background-color: #ff2020;
+            }
+        </style>
     </head>
     <body>
-        <style>
-            .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-}
+        <my-header></my-header>
 
-.navbar nav ul {
-    list-style-type: none;
-    display: flex;
-    gap: 20px;
-}
 
-.navbar nav ul li {
-    display: inline;
-}
-
-.navbar .login-button {
-    margin-left: auto;
-}
-
-.navbar .login-button button {
-    padding: 8px 16px;
-    background-color: #007BFF;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.navbar .login-button button:hover {
-    background-color: #0056b3;
-}
-
-        </style>
-        <!-- scroller
-    <div class="scroller"></div> -->
-        <div class="container">
-            <div class="navbar">
-                <div class="logo">
-                    <img src="images/logo.png" width="100">
-                </div>
-                <nav>
-                    <ul>
-                        <li>
-                            <a href="#">&#127968; Home</a>
-                            <a href="#bannerad1">&#128176; Deals</a>
-                            <a href="#Home-container">&#128722; Shop</a>
-                            <a href="#footer">&#127873; Today's Offer</a>
-                        </li>
-                    </ul>
-                </nav>
-                <div class="login-button">
-                    <a href="pages/login.html">
-                        <button>Log out</button>
-                    </a>
-                </div>
-            </div>
-        </div>
-        
-              <div class="items">
-                <nav>
-                    <ul>
-                        <li>
-                            <a href="pages/Electronics.html" target="_blank">&#128241; Electronics</a>
-                            <a href="pages/Fashion.html" target="_blank">&#128087; Fashion</a>
-                            <a href="pages/Grocery.html" target="_blank">&#128722; Grocery</a>
-                            <a href="pages/HF.html" target="_blank">&#128716;Home & Furniture </a>
-                            <a href="pages/TKS.html" target="_blank">&#127879;Toys & Kid Accessories</a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-        </div>
         <section class="slider-container" id="slider-container">
             <div class="slider-wrapper">
                 <div class="slider">
@@ -277,3 +259,46 @@
             </div>
           </footer>
           
+
+        <script>
+          
+            function updateAuthSection() {
+                const authSection = document.getElementById('auth-section');
+                
+                firebase.auth().onAuthStateChanged((user) => {
+                    if (user) {
+                        //User Signed In
+                        authSection.innerHTML = `
+                            <div class="welcome-user">
+                                <!-- <span>Welcome, ${user.email}</span>
+                                <button class="signup-btn" onclick="handleLogout()">Logout</button>
+                            </div>
+                        `;
+                    } else {
+                        //User Signed Out
+                        authSection.innerHTML = `
+                            <button class="login-btn" onclick="window.location.href='pages/login.html'">Login</button>
+                            <button class="signup-btn" onclick="window.location.href='pages/register.html'">Sign Up</button>
+                        `;
+                    }
+                });
+            }
+
+            //handle logout
+            function handleLogout() {
+                firebase.auth().signOut()
+                    .then(() => {
+                        console.log('User signed out successfully');
+                        window.location.href = 'index.html';
+                    })
+                    .catch((error) => {
+                        console.error('Error signing out:', error);
+                    });
+            }
+
+      
+            document.addEventListener('DOMContentLoaded', updateAuthSection);
+        </script>
+        <script src="components/header.js"></script>
+    </body>
+</html>
