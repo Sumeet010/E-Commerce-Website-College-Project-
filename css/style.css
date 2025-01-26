@@ -2,44 +2,9 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
 }
-.navbar{
-    display: flex;
-    align-items: center;
-    padding: 20;
-    height: 50px;
-}
-.items {
-    background-color: #161880;
-    padding: 20px 25px;
-}
-.items a {
-    color: white; 
-}
-.items ul {
-    list-style-type: none;
-}
-.items ul li {
-    display: inline-block;
-    margin-right: 20px;
-}
-nav{
-    flex: 1;
-    text-align: center;
-}
-nav ul{
-    display: inline-block;
-    list-style-type: none;
-}
-nav ul li{
-    display: inline-block;
-    margin-right: 20px;
-}
-a{
-    text-decoration: none;
-    color: #262626;
-    margin-right: 7px;
-}
+
 .conatiner{
     max-width: 1300px;
     margin: auto;
@@ -528,3 +493,4 @@ height: 35px;
 width: 35px;
 margin-right: 35px;
 }
+
