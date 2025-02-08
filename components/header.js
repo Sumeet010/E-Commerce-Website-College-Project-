@@ -28,7 +28,7 @@ class Header extends HTMLElement {
 
                 nav ul {
                     display: inline-block;
-                 list-style-type: none;   
+                    list-style-type: none;   
                 }
 
                 nav ul li {
@@ -171,11 +171,10 @@ class Header extends HTMLElement {
                 // User is signed out
                 loginSection.innerHTML = `
                     <button class="login-btn" onclick="window.location.href='login.html'">Login</button>
-                    <button class="signup-btn" onclick="window.location.href='register.html'">Create</button>
                 `;
             }
         });
     }
 }
 
-customElements.define('my-header', Header); 
+customElements.define('my-header', Header);
