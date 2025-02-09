@@ -160,7 +160,6 @@ class Header extends HTMLElement {
         firebase.auth().onAuthStateChanged((user) => {
             const loginSection = document.getElementById('loginSection');
             if (user) {
-                // User is signed in
                 loginSection.innerHTML = `
                     <div class="welcome-user">
                         <span>Welcome, ${user.email}</span>
@@ -168,13 +167,29 @@ class Header extends HTMLElement {
                     </div>
                 `;
             } else {
-                // User is signed out
+                // Get the current path
+                const currentPath = window.location.pathname;
+                // Determine if we're in the pages directory
+                const isInPagesDir = currentPath.includes('/pages/');
+                // Set the login path accordingly
+                const loginPath = isInPagesDir ? './login.html' : './pages/login.html';
+                
                 loginSection.innerHTML = `
-                    <button class="login-btn" onclick="window.location.href='login.html'">Login</button>
+                    <button class="login-btn" onclick="window.location.href='${loginPath}'">Login</button>
                 `;
             }
         });
     }
+}
+
+function handleLogout() {
+    firebase.auth().signOut()
+        .then(() => {
+            window.location.href = window.location.pathname.includes('/pages/') ? '../index.html' : 'index.html';
+        })
+        .catch((error) => {
+            console.error('Error logging out:', error);
+        });
 }
 
 customElements.define('my-header', Header);
