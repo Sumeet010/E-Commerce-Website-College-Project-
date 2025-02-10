@@ -41,8 +41,12 @@
                                 <p class="name">${product.name}</p>
                                 <p class="description">${product.description || 'No description available'}</p>
                                 <p class="price">Price:<span>₹${product.price}</span></p>
-                                <button onclick="checkLoginAndAddToCart('${doc.id}')">Buy</button>
+                                <div class="product-buttons">
+                                    <button class="add-to-cart-btn" onclick="addToCart('${doc.id}', '${product.name}', ${product.price}, '${product.imageUrl}')">Add to Cart</button>
+                                    <button class="buy-now-btn" onclick="checkLoginAndProceedToBuy('${doc.id}', '${product.name}', ${product.price}, '${product.imageUrl}')">Buy Now</button>
+                                </div>
                             </div>
+
                         `;
                         productsContainer.innerHTML += productCard;
                     });
@@ -52,16 +56,19 @@
                 });
         }
 
-        function checkLoginAndAddToCart(productId) {
-            console.log("Checking login status...");
+        function checkLoginAndProceedToBuy(productId, name, price, imageUrl) {
             const user = firebase.auth().currentUser;
             
             if (user) {
-                console.log("User is logged in:", user.email);
-                // Add to cart logic to be implemented later
-                console.log("Cart functionality not implemented yet");
+                // Encode the parameters to handle special characters
+                const params = new URLSearchParams({
+                    productId: productId,
+                    name: name,
+                    price: price,
+                    imageUrl: imageUrl
+                });
+                window.location.href = `buy.html?${params.toString()}`;
             } else {
-                console.log("User not logged in, showing prompt");
                 showLoginPrompt();
             }
         }
@@ -87,6 +94,48 @@
             const prompt = document.querySelector('.login-prompt');
             if (prompt) {
                 prompt.remove();
+            }
+        }
+
+        async function addToCart(productId, name, price, imageUrl) {
+            const user = firebase.auth().currentUser;
+            
+            if (!user) {
+                showLoginPrompt();
+                return;
+            }
+
+            try {
+                // Check if item already exists in cart
+                const cartRef = firebase.firestore().collection('cart');
+                const existingItem = await cartRef
+                    .where('userId', '==', user.uid)
+                    .where('productId', '==', productId)
+                    .get();
+
+                if (!existingItem.empty) {
+                    // Update quantity if item exists
+                    const doc = existingItem.docs[0];
+                    await cartRef.doc(doc.id).update({
+                        quantity: firebase.firestore.FieldValue.increment(1)
+                    });
+                } else {
+                    // Add new item to cart
+                    await cartRef.add({
+                        userId: user.uid,
+                        productId: productId,
+                        name: name,
+                        price: price,
+                        imageUrl: imageUrl,
+                        quantity: 1,
+                        addedAt: new Date()
+                    });
+                }
+                
+                alert('Item added to cart!');
+            } catch (error) {
+                console.error('Error adding to cart:', error);
+                alert('Error adding item to cart');
             }
         }
 

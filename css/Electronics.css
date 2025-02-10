@@ -76,7 +76,7 @@
     padding: 12px;
     border: none;
     border-radius: 8px;
-    background: #2874f0;
+    background: #161880;
     color: white;
     font-size: 1rem;
     font-weight: 500;
@@ -85,10 +85,24 @@
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
+/* added explicitly add to cart button styling */
+.product-buttons .add-to-cart-btn{  
+    border: 1px solid #212121;
+    background: none;
+    color: #212121;
+}
+.product-buttons .add-to-cart-btn:hover{  
+ 
+    background: #212121;
+    color: #ffffff;
+}
+
+
 
 .section-card1 button:hover {
-    background: #1c5dba;
+    background: #212121;
     transform: translateY(-2px);
+
     box-shadow: 0 5px 15px rgba(40, 116, 240, 0.2);
 }
 
@@ -136,7 +150,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
-    -webkit-line-clamp: 3;
+    /* -webkit-line-clamp: 3; */
     -webkit-box-orient: vertical;
 }
 
