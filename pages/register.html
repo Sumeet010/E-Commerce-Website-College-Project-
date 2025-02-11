@@ -26,5 +26,47 @@
     </div>
    
 </body>
-<script type="module" src="../js/register.js" defer></script>
+<script type="module" src="../js/register.js" defer>
+    function showNotification(message, type = 'error') {
+        // Remove existing notification if any
+        const existingNotification = document.querySelector('.notification');
+        if (existingNotification) {
+            existingNotification.remove();
+        }
+
+        // Create new notification
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.textContent = message;
+
+        // Add to document
+        document.body.appendChild(notification);
+
+        // Remove notification after 3 seconds
+        setTimeout(() => {
+            notification.style.animation = 'slideOut 0.5s forwards';
+            setTimeout(() => {
+                notification.remove();
+            }, 500);
+        }, 3000);
+    }
+
+    const submitButton = document.getElementById('submit');
+
+    submitButton.addEventListener('click', async () => {
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        try {
+            await firebase.auth().createUserWithEmailAndPassword(email, password);
+            showNotification('Account created successfully!', 'success');
+            setTimeout(() => {
+                window.location.href = 'Electronics.html';
+            }, 1000);
+        } catch (error) {
+            console.error('Registration error:', error);
+            showNotification(error.message);
+        }
+    });
+</script>
 </html>

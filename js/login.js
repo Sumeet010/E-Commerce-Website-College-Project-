@@ -18,21 +18,48 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-const submit = document.getElementById('submit');
+document.addEventListener('DOMContentLoaded', () => {
+    const loginForm = document.getElementById('loginForm');
 
-submit.addEventListener('click', async function(event) {
-    event.preventDefault();
-    
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    
-    try {
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        console.log("User registered:", userCredential.user);
-        alert("User logged in successfully");
-        window.location.href = "../index.html";
-    } catch (error) {
-        console.error("Registration error:", error);
-        alert("Registration error: " + error.message);
-    }
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        try {
+            await signInWithEmailAndPassword(auth, email, password);
+            // After successful login, redirect to Electronics page
+            window.location.href = 'Electronics.html';
+        } catch (error) {
+            console.error('Login error:', error);
+            // Show error message to user
+            const errorMessage = document.createElement('div');
+            errorMessage.className = 'error-message';
+            errorMessage.textContent = 'Invalid email or password';
+            
+            // Remove any existing error message
+            const existingError = document.querySelector('.error-message');
+            if (existingError) {
+                existingError.remove();
+            }
+            
+            // Add the error message to the form
+            loginForm.insertBefore(errorMessage, loginForm.firstChild);
+        }
+    });
 });
+
+function showError(message) {
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'error-message';
+    errorDiv.style.display = 'block';
+    errorDiv.textContent = message;
+    
+    const existingError = document.querySelector('.error-message');
+    if (existingError) {
+        existingError.remove();
+    }
+    
+    document.querySelector('.login-container').appendChild(errorDiv);
+}

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Purchase</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/buy.css">
+</head>
+<body>
+    <my-header></my-header>
+    
+    <div class="container">
+        <h2>Complete Your Purchase</h2>
+        <div class="product-details">
+            <div class="product-image" id="productImage"></div>
+            <div class="product-info">
+                <h3 id="productName"></h3>
+                <p>Price: ₹<span id="productPrice"></span></p>
+            </div>
+        </div>
+
+        <form class="checkout-form" id="checkoutForm">
+            <input type="text" name="customerName" placeholder="Full Name" required>
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="tel" name="phone" placeholder="Phone Number" required>
+            <textarea name="address" placeholder="Shipping Address" required rows="4"></textarea>
+            <button type="submit">Place Order</button>
+        </form>
+    </div>
+
+    <!-- Order Confirmation Modal -->
+    <div id="orderConfirmationModal" class="confirmation-modal" style="display: none;">
+        <div class="modal-content">
+            <div class="success-checkmark">
+                <div class="check-icon">
+                    <span class="icon-line line-tip"></span>
+                    <span class="icon-line line-long"></span>
+                </div>
+            </div>
+            <h3>Order Placed Successfully!</h3>
+            <p>Thank you for your purchase.</p>
+            <p>Your order has been received and is being processed.</p>
+            <button onclick="redirectToOrders()" class="modal-btn">View Orders</button>
+        </div>
+    </div>
+
+    <!-- Firebase Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="../js/firebase-config.js"></script>
+    <script src="../js/buy.js"></script>
+    <script src="../components/header.js"></script>
+</body>
+</html> 

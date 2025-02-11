@@ -170,39 +170,48 @@ function updateProduct(event, productId) {
 }
 
 // Load Orders
-function loadOrders() {
-    db.collection('orders')
-        .orderBy('createdAt', 'desc')
-        .get()
-        .then((snapshot) => {
-            const ordersList = document.getElementById('orders-list');
-            ordersList.innerHTML = '';
+async function loadOrders() {
+    try {
+        const ordersSnapshot = await firebase.firestore().collection('orders')
+            .orderBy('orderDate', 'desc')
+            .get();
+
+        const ordersList = document.getElementById('orders-list');
+        ordersList.innerHTML = '';
+
+        ordersSnapshot.forEach(doc => {
+            const order = doc.data();
+            const orderDate = order.orderDate.toDate().toLocaleDateString();
             
-            snapshot.forEach((doc) => {
-                const order = doc.data();
-                const orderElement = `
-                    <tr>
-                        <td>${doc.id}</td>
-                        <td>${order.userName}</td>
-                        <td>${order.items.length} items</td>
-                        <td>₹${order.totalAmount}</td>
-                        <td>
-                            <select onchange="updateOrderStatus('${doc.id}', this.value)">
-                                <option value="pending" ${order.status === 'pending' ? 'selected' : ''}>Pending</option>
-                                <option value="processing" ${order.status === 'processing' ? 'selected' : ''}>Processing</option>
-                                <option value="shipped" ${order.status === 'shipped' ? 'selected' : ''}>Shipped</option>
-                                <option value="delivered" ${order.status === 'delivered' ? 'selected' : ''}>Delivered</option>
-                                <option value="cancelled" ${order.status === 'cancelled' ? 'selected' : ''}>Cancelled</option>
-                            </select>
-                        </td>
-                        <td>
-                            <button onclick="viewOrderDetails('${doc.id}')" class="view-btn">View Details</button>
-                        </td>
-                    </tr>
-                `;
-                ordersList.innerHTML += orderElement;
-            });
+            const row = `
+                <tr>
+                    <td>${doc.id}</td>
+                    <td>${order.customerName}</td>
+                    <td>${order.productName}</td>
+                    <td>₹${order.price}</td>
+                    <td>
+                        <select onchange="updateOrderStatus('${doc.id}', this.value)" class="status-${order.status}">
+                            <option value="pending" ${order.status === 'pending' ? 'selected' : ''}>Pending</option>
+                            <option value="processing" ${order.status === 'processing' ? 'selected' : ''}>Processing</option>
+                            <option value="shipped" ${order.status === 'shipped' ? 'selected' : ''}>Shipped</option>
+                            <option value="delivered" ${order.status === 'delivered' ? 'selected' : ''}>Delivered</option>
+                            <option value="cancelled" ${order.status === 'cancelled' ? 'selected' : ''}>Cancelled</option>
+                        </select>
+                    </td>
+                    <td>
+                        <button onclick="viewOrderDetails('${doc.id}')" class="view-btn">View Details</button>
+                    </td>
+                </tr>
+            `;
+            ordersList.innerHTML += row;
         });
+
+        updateDashboardStats();
+
+    } catch (error) {
+        console.error('Error loading orders:', error);
+        alert('Error loading orders');
+    }
 }
 
 // Update Order Status
@@ -221,31 +230,52 @@ function updateOrderStatus(orderId, newStatus) {
 }
 
 // View Order Details
-function viewOrderDetails(orderId) {
-    db.collection('orders').doc(orderId).get()
-        .then((doc) => {
-            const order = doc.data();
-            const detailsHtml = `
-                <div class="order-details">
-                    <h3>Order Details</h3>
-                    <p><strong>Order ID:</strong> ${doc.id}</p>
-                    <p><strong>Customer:</strong> ${order.userName}</p>
-                    <p><strong>Email:</strong> ${order.userEmail}</p>
-                    <p><strong>Date:</strong> ${order.createdAt.toDate().toLocaleString()}</p>
-                    <p><strong>Status:</strong> ${order.status}</p>
-                    <p><strong>Total Amount:</strong> ₹${order.totalAmount}</p>
+async function viewOrderDetails(orderId) {
+    try {
+        const orderDoc = await firebase.firestore().collection('orders').doc(orderId).get();
+        const order = orderDoc.data();
+
+        const modalContainer = document.getElementById('order-details-modal');
+        modalContainer.innerHTML = `
+            <div class="modal-content">
+                <span class="close-modal" onclick="closeOrderDetails()">&times;</span>
+                <h3>Order Details</h3>
+                <div class="order-info">
+                    <div class="info-group">
+                        <h4>Order Information</h4>
+                        <p><strong>Order ID:</strong> ${orderId}</p>
+                        <p><strong>Order Date:</strong> ${order.orderDate.toDate().toLocaleString()}</p>
+                        <p><strong>Status:</strong> ${order.status}</p>
+                        <p><strong>Total Amount:</strong> ₹${order.price}</p>
+                    </div>
                     
-                    <h4>Items:</h4>
-                    <ul>
-                        ${order.items.map(item => `
-                            <li>${item.name} - ₹${item.price} x ${item.quantity}</li>
-                        `).join('')}
-                    </ul>
+                    <div class="info-group">
+                        <h4>Customer Information</h4>
+                        <p><strong>Name:</strong> ${order.customerName}</p>
+                        <p><strong>Email:</strong> ${order.email}</p>
+                        <p><strong>Phone:</strong> ${order.phone}</p>
+                        <p><strong>Shipping Address:</strong> ${order.address}</p>
+                    </div>
+                    
+                    <div class="info-group">
+                        <h4>Product Information</h4>
+                        <p><strong>Product Name:</strong> ${order.productName}</p>
+                        <p><strong>Price:</strong> ₹${order.price}</p>
+                    </div>
                 </div>
-            `;
-            document.getElementById('order-details-container').innerHTML = detailsHtml;
-            document.getElementById('order-details-container').style.display = 'block';
-        });
+            </div>
+        `;
+        modalContainer.style.display = 'block';
+
+    } catch (error) {
+        console.error('Error loading order details:', error);
+        alert('Error loading order details');
+    }
+}
+
+function closeOrderDetails() {
+    const modalContainer = document.getElementById('order-details-modal');
+    modalContainer.style.display = 'none';
 }
 
 // Show different sections
@@ -273,4 +303,113 @@ function logout() {
 document.addEventListener('DOMContentLoaded', () => {
     checkAdminAuth();
     showSection('dashboard'); // Show dashboard by default
-}); 
+});
+
+// Add function to delete order
+async function deleteOrder(orderId) {
+    if (confirm('Are you sure you want to delete this order? This action cannot be undone.')) {
+        try {
+            await firebase.firestore().collection('orders').doc(orderId).delete();
+            alert('Order deleted successfully');
+            loadOrders(); // Refresh the orders list
+        } catch (error) {
+            console.error('Error deleting order:', error);
+            alert('Error deleting order');
+        }
+    }
+}
+
+// Add function to print order details
+async function printOrderDetails(orderId) {
+    try {
+        const orderDoc = await firebase.firestore().collection('orders').doc(orderId).get();
+        const order = orderDoc.data();
+        
+        // Create print content
+        const printContent = `
+            <div class="print-order">
+                <h2>Order Details</h2>
+                <p><strong>Order ID:</strong> ${orderId}</p>
+                <p><strong>Customer:</strong> ${order.customerName}</p>
+                <p><strong>Email:</strong> ${order.email}</p>
+                <p><strong>Phone:</strong> ${order.phone}</p>
+                <p><strong>Address:</strong> ${order.address}</p>
+                <p><strong>Product:</strong> ${order.productName}</p>
+                <p><strong>Price:</strong> ₹${order.price}</p>
+                <p><strong>Status:</strong> ${order.status}</p>
+                <p><strong>Order Date:</strong> ${order.orderDate.toDate().toLocaleString()}</p>
+            </div>
+        `;
+
+        // Create a new window for printing
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write(`
+            <html>
+                <head>
+                    <title>Order Details - ${orderId}</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; padding: 20px; }
+                        .print-order { max-width: 800px; margin: 0 auto; }
+                        h2 { color: #333; }
+                        p { margin: 10px 0; }
+                        strong { color: #555; }
+                    </style>
+                </head>
+                <body>
+                    ${printContent}
+                </body>
+            </html>
+        `);
+        printWindow.document.close();
+        printWindow.print();
+    } catch (error) {
+        console.error('Error printing order details:', error);
+        alert('Error printing order details');
+    }
+}
+
+// Update the updateDashboardStats function
+async function updateDashboardStats() {
+    try {
+        // Get all orders
+        const ordersSnapshot = await firebase.firestore().collection('orders').get();
+        
+        let totalOrders = 0;
+        let totalRevenue = 0;
+        let monthlyRevenue = 0;
+        
+        // Get current month and year
+        const now = new Date();
+        const currentMonth = now.getMonth();
+        const currentYear = now.getFullYear();
+
+        ordersSnapshot.forEach(doc => {
+            const order = doc.data();
+            
+            // Only count orders that are not cancelled
+            if (order.status !== 'cancelled') {
+                totalOrders++;
+                
+                // Add to total revenue if order is delivered
+                if (order.status === 'delivered') {
+                    totalRevenue += Number(order.price);
+                    
+                    // Check if order is from current month
+                    const orderDate = order.orderDate.toDate();
+                    if (orderDate.getMonth() === currentMonth && 
+                        orderDate.getFullYear() === currentYear) {
+                        monthlyRevenue += Number(order.price);
+                    }
+                }
+            }
+        });
+
+        // Update the dashboard display
+        document.getElementById('total-orders').textContent = totalOrders;
+        document.getElementById('total-revenue').textContent = `₹${totalRevenue.toFixed(2)}`;
+        document.getElementById('monthly-revenue').textContent = `₹${monthlyRevenue.toFixed(2)}`;
+
+    } catch (error) {
+        console.error('Error updating dashboard stats:', error);
+    }
+} 
