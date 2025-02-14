@@ -1,8 +1,8 @@
-
 *{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
 }
 .navbar{
     display: flex;
@@ -50,56 +50,141 @@ a{
 
 /* product-section */
 .Doctors-Section{
-    margin-top: 50px;
-    margin-left: 50px;
-    flex-wrap: wrap;
-    display: flex;
-   
-
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+    padding: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
 }
+
 .section-card1{
-    height:350px;
-    width: 250px;
-    background-color: rgb(255, 255, 255);
-    border-radius: 8px;
-    text-align: center;
-    margin-left: 35px;
-    /* align-items: center; */
-    margin-bottom: 35px;
-    border: 2px solid #c5c5c5d0;
-
-
-}
-
-.Im1{
-    background-size: cover;
-    border: none;
-    height:200px;
-    width: 250px;
-    background-color: rgb(162, 161, 161);  
-    border-radius: 8px 8px 0px 0px;
-    background-size: cover;
-}
-button{
-    height: 35px;
-    width: 80%;
-    background-color: rgb(29, 142, 255);
-    color: white;
-    border: none;
+    background: white;
     border-radius: 5px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
     position: relative;
-    bottom: -24px;
-    
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    height: 500px;
 }
 
-.name{
-    font-size: 20px;
-    margin-top: 5px;
+.section-card1:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.Im1 {
+    width: 100%;
+    height: 250px;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    transition: transform 0.3s ease;
+}
+
+.section-card1:hover .Im1 {
+    transform: scale(1.1);
+}
+
+.Im1::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.05);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.section-card1:hover .Im1::after {
+    opacity: 1;
+}
+
+.name {
+    font-size: 1.2rem;
     font-weight: 600;
+    color: #333;
+    margin-bottom: 10px;
 }
-.phone{
-    font-size: medium;
+
+.description {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+    line-height: 1.4;
 }
-.specialist span {
-    color: rgb(29, 142, 255);
+
+.price {
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.price span {
+    color: #161880;
+    font-weight: 600;
+    margin-left: 5px;
+}
+
+.product-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: auto;
+    padding-top: 15px;
+}
+
+.product-buttons button {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.add-to-cart-btn {
+    background: white;
+    color: #161880;
+    border: 1px solid #161880 !important;
+}
+
+.buy-now-btn {
+    background: #161880;
+    color: white;
+}
+
+.add-to-cart-btn:hover {
+    background: #f0f0f0;
+}
+
+.buy-now-btn:hover {
+    background: #0f0f60;
+}
+
+@media (max-width: 768px) {
+    .Doctors-Section {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 15px;
+        padding: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .Doctors-Section {
+        grid-template-columns: 1fr;
+    }
+    
+    .product-buttons {
+        flex-direction: column;
+    }
 }

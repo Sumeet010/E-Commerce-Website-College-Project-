@@ -22,136 +22,132 @@
     overflow: hidden;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     position: relative;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    height: 500px;
 }
 
 .section-card1:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
-.Im1{
+.Im1 {
     width: 100%;
     height: 250px;
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
-    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 15px;
     transition: transform 0.3s ease;
-    background-color: #f8f9fa;
 }
 
 .section-card1:hover .Im1 {
-    transform: scale(1.05);
+    transform: scale(1.1);
 }
 
-.name{
-    font-size: 1.1rem;
+.Im1::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.05);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.section-card1:hover .Im1::after {
+    opacity: 1;
+}
+
+.name {
+    font-size: 1.2rem;
     font-weight: 600;
-    color: #2c3e50;
-    margin: 20px 20px 10px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.description {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+    line-height: 1.4;
 }
 
 .price {
-    padding: 0 20px;
+    font-size: 1.1rem;
+    color: #666;
     margin-bottom: 20px;
-    color: #7f8c8d;
-    font-size: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 5px;
 }
 
 .price span {
-    color: #2874f0;
+    color: #161880;
     font-weight: 600;
-    font-size: 1.2rem;
+    margin-left: 5px;
 }
 
-.section-card1 button {
-    width: calc(100% - 40px);
-    margin: 0 20px 20px;
+.product-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: auto;
+    padding-top: 15px;
+}
+
+.product-buttons button {
+    flex: 1;
     padding: 12px;
     border: none;
     border-radius: 8px;
-    background: #161880;
-    color: white;
-    font-size: 1rem;
+    font-size: 0.9rem;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.3s ease;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-/* added explicitly add to cart button styling */
-.product-buttons .add-to-cart-btn{  
-    border: 1px solid #212121;
-    background: none;
-    color: #212121;
-}
-.product-buttons .add-to-cart-btn:hover{  
- 
-    background: #212121;
-    color: #ffffff;
 }
 
-
-
-.section-card1 button:hover {
-    background: #212121;
-    transform: translateY(-2px);
-
-    box-shadow: 0 5px 15px rgba(40, 116, 240, 0.2);
+.add-to-cart-btn {
+    background: white;
+    color: #161880;
+    border: 1px solid #161880 !important;
 }
 
-/* Responsive Design */
+.buy-now-btn {
+    background: #161880;
+    color: white;
+}
+
+.add-to-cart-btn:hover {
+    background: #f0f0f0;
+}
+
+.buy-now-btn:hover {
+    background: #0f0f60;
+}
+
 @media (max-width: 768px) {
     .Doctors-Section {
         grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
         gap: 15px;
         padding: 15px;
     }
-
-    .Im1 {
-        height: 200px;
-    }
-
-    .name {
-        font-size: 1rem;
-        margin: 15px 15px 8px;
-    }
-
-    .price {
-        padding: 0 15px;
-        margin-bottom: 15px;
-    }
-
-    .section-card1 button {
-        width: calc(100% - 30px);
-        margin: 0 15px 15px;
-        padding: 10px;
-    }
 }
 
+@media (max-width: 480px) {
+    .Doctors-Section {
+        grid-template-columns: 1fr;
+    }
+    
+    .product-buttons {
+        flex-direction: column;
+    }
+}
 
 .specialist span {
     color: rgb(29, 142, 255);
-}
-
-.description {
-    padding: 0 20px;
-    margin: 10px 0;
-    color: #666;
-    font-size: 0.9rem;
-    line-height: 1.4;
-    height: 60px; 
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    /* -webkit-line-clamp: 3; */
-    -webkit-box-orient: vertical;
 }
 
 /* Login Prompt Styles */
