@@ -14,11 +14,13 @@
 .slider-container{
     padding: 2rem;  
     margin: 0; 
+    width: 100%;
 }
 .slider-wrapper{
     position: relative;
-    max-width: 1200px; /* Increased width for better visibility */
+    max-width: 1400px; /* Increased from 1200px */
     margin: 0 auto;
+    width: 100%;
 }
 .slider{
     display: flex;
@@ -27,14 +29,15 @@
     scroll-behavior: smooth;
     box-shadow: 0 1.5rem 3rem -0.75rem hsla(0,0%,0%,0.25);
     border-radius: 0.5rem;
+    width: 100%;
 }
 .slider img{
    flex: 0 0 100%;
    scroll-snap-align: start;
-   object-fit: fill;
-   height: auto;
-   height:370px; 
-  
+   object-fit: fill; /* Changed to fill */
+   width: 100%;
+   height: 400px; /* Increased height */
+   max-width: 100%; /* Added max-width */
 }
 .slider-nav{
     display: flex;
@@ -76,25 +79,20 @@ margin:0px 50px;
 }
 .main-text{
 margin:0;
-font-size: 25px;
-font-weight: bold;
+font-size: 24px;
+font-weight: 600;
+
 }
 .minor-text{
 margin: 0;
+color: #666;
+font-size: 12px;
 }
-.button{
-height: 35px;
-width: 100px;
-display: flex;
-align-items: center;
-justify-content: center;
-border-radius: 20px;
 
-}
 button{
-height: 100%;
+height: 35px;
 border-radius: 200px;
-width: 100%;
+width: 100px;
 background-color:transparent;
 border: 2px solid blue;
 color: rgb(0, 17, 255);
@@ -159,28 +157,35 @@ font-weight: 600;
 .content-box{
 width: 350px;
 }
-.content-btn{
-margin-top: 10px;
-width: 65%;
-height:40px;
+.content-btn .btn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 12px;
+    font-weight: 500;
+    background: #161880;
+    color: white;
+    border: 1px solid #161880;
+    border-radius: 8px;
+    width: 50%;
+    margin-top: 10px;
 }
-.content-btn button{
-background-color: blue;
-color: rgb(244, 224, 224);
-border: none;
-font-size: 12px;
-font-weight: 600;
-}
+
 .product-ads{
-    height: 500px;
+    height: 490px;
     width: 30%;
-    background-color: rgb(228, 228, 228);
+    background-color: rgb(255, 255, 255);
     margin-right: 0px;
     overflow: hidden; /* Prevent image overflow */
+    
 }
 
 .product-ads img {
-    width: 100%;
+    border-radius: 5px;
+    width: 90%;
     height: 100%;
     object-fit: cover; /* This will make the image cover the entire container */
     display: block; /* Remove any default spacing */
@@ -188,88 +193,119 @@ font-weight: 600;
 .sub-product{
 display: flex;
 justify-content: space-between;
-width: 90%;
+width: 95%;
 }
 
 /* home applications */
+.Home-container {
+    padding: 40px 0;
+    background: #ffffff;
+}
+
+.offer {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+    padding: 20px 50px;
+}
+
 .card {
-min-width: 250px;
-border: 1px solid #ddd;
-border-radius: 10px;
-padding: 15px;
-text-align: center;
-background-color: white;
-scroll-snap-align: start;
-height: 420px;
+    background: white;
+    border-radius: 5px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    height: 450px;
+    position: relative;
 }
+
 .card img {
-/* width: px; */
-height: 250px;
-margin-bottom: 10px;
-background-size: contain;
+    width: 100%;
+    height: 240px;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
+    margin-bottom: 15px;
+    transition: transform 0.3s ease;
 }
+
+.card:hover img {
+    transform: scale(1.1);
+}
+
 .card h3 {
-font-size: 16px;
-margin: 10px 0;
-color: #333;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    
+    max-height: 2.8em;
+    word-wrap: break-word;
+    width: 100%;
+    line-height: 1.4;
 }
+
 .card p {
-margin: 10px 0;
-font-size: 14px;
-color: #555;
+    color: #666;
+    font-size: 0.9rem;
+    margin: 10px 0;
+    line-height: 1.4;
 }
-.card .old-price {
-text-decoration: line-through;
-color: #999;
-margin-right: 5px;
-font-size: 12px;
+
+.old-price {
+    text-decoration: line-through;
+    color: #999;
+    margin-right: 10px;
 }
-.card .price {
-color: #e60000;
-font-weight: bold;
-font-size: 14px;
+
+.price {
+    color: #161880;
+    font-weight: 600;
+    margin-left: 5px;
 }
-.btn {
-background-color: #007bff;
-color: #fff;
-padding: 10px 20px;
-border: none;
-border-radius: 5px;
-cursor: pointer;
-font-size: 14px;
-transition: background-color 0.3s;
-height: 40px;
+
+.card .btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 12px;
+    font-weight: 500;
+    background: #161880;
+    color: white;
+    border: 1px solid #161880;
+    border-radius: 8px;
+    width: 50%;
+ 
 }
+
 .btn:hover {
-background-color: #0056b3;
-}
-.offer {
-display: flex;
-overflow-x: auto;
-scroll-snap-type: x mandatory;
-gap: 20px;
-padding: 20px;
-margin-left: 50px;
-}
-.offer::-webkit-scrollbar {
-display: none; /* Hide scrollbar for Chrome, Safari, and Opera */
-}
-.offer {
--ms-overflow-style: none;  /* IE and Edge */
-scrollbar-width: none;  /* Firefox */
-}
-.offer-container {
-padding: 40px 50px;
-background-color: #fff;
-}
-h2 {
-text-align: center;
-margin: 20px 0;
-font-size: 24px;
-color: #333;
+    background: #161880;
+    color: white;
 }
 
+@media (max-width: 768px) {
+    .offer {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 15px;
+        padding: 15px;
+    }
+}
 
+@media (max-width: 480px) {
+    .offer {
+        grid-template-columns: 1fr;
+    }
+}
 
 /* home application part 2 */
 .product-card {
@@ -428,10 +464,12 @@ margin: 0;
 input,
 .footer-btn{
 font-size: 1em;
-padding: 1em;
+/* padding: 1em; */
 width: 100%;
 border-radius: 5px;
-margin-bottom: 5px;
+height: 55px;
+margin-bottom: 15px;
+text-align: center;
 }
 .footer-btn {
 background-color: #c7940a;
@@ -492,5 +530,32 @@ justify-content: end;
 height: 35px;
 width: 35px;
 margin-right: 35px;
+}
+
+/* Make slider responsive */
+@media (max-width: 1440px) {
+    .slider-wrapper {
+        max-width: 95%; /* Use percentage for smaller screens */
+    }
+}
+
+@media (max-width: 768px) {
+    .slider img {
+        height: 350px; /* Reduced height for mobile */
+    }
+    
+    .slider-container {
+        padding: 1rem;
+    }
+}
+
+/* Hide scrollbar but keep functionality */
+.slider::-webkit-scrollbar {
+    display: none; /* For Chrome, Safari and Opera */
+}
+
+.slider {
+    -ms-overflow-style: none;  /* For Internet Explorer and Edge */
+    scrollbar-width: none;  /* For Firefox */
 }
 
