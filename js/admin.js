@@ -38,6 +38,7 @@ function loadAdminDashboard() {
     loadDashboardStats();
     loadProducts();
     loadOrders();
+    loadInventoryStats();
 }
 
 // Dashboard Statistics
@@ -60,19 +61,25 @@ function loadDashboardStats() {
 
 // Product Management
 function loadProducts() {
-    db.collection('products').get()
+    firebase.firestore().collection('products').get()
         .then(snapshot => {
             const productsList = document.getElementById('products-list');
+            if (!productsList) return;
+            
             productsList.innerHTML = '';
             
             snapshot.forEach(doc => {
                 const product = doc.data();
+                const stockStatus = getStockStatus(product.stock || 0);
                 const productElement = `
                     <div class="product-item">
                         <img src="${product.imageUrl}" alt="${product.name}">
                         <h3>${product.name}</h3>
                         <p>₹${product.price}</p>
+                        <p>Category: ${product.category}</p>
+                        <p class="stock-status ${stockStatus.class}">${stockStatus.text}</p>
                         <div class="product-actions">
+                            <button onclick="updateStock('${doc.id}', ${product.stock || 0})" class="stock-btn">Update Stock</button>
                             <button onclick="editProduct('${doc.id}')" class="edit-btn">Edit</button>
                             <button onclick="deleteProduct('${doc.id}')" class="delete-btn">Delete</button>
                         </div>
@@ -80,35 +87,65 @@ function loadProducts() {
                 `;
                 productsList.innerHTML += productElement;
             });
+        })
+        .catch(error => {
+            console.error('Error loading products:', error);
+            alert('Error loading products');
         });
 }
 
 // Show/Hide Product Form
 function showAddProductForm() {
-    document.getElementById('product-form').style.display = 'block';
-    document.getElementById('productForm').reset();
+    const productForm = document.getElementById('product-form');
+    if (productForm) {
+        productForm.style.display = 'block';
+        // Reset form and set it back to add mode
+        document.getElementById('productForm').reset();
+        document.getElementById('productForm').onsubmit = handleProductSubmit;
+    }
 }
 
-// Handle Product Form Submit
+// Handle Product Form Submit (Add new product)
+document.addEventListener('DOMContentLoaded', () => {
+    // Add form submit event listener
+    const productForm = document.getElementById('productForm');
+    if (productForm) {
+        productForm.addEventListener('submit', handleProductSubmit);
+    }
+});
+
 function handleProductSubmit(event) {
     event.preventDefault();
     
+    // Get form values
     const productData = {
         name: document.getElementById('productName').value,
         price: Number(document.getElementById('productPrice').value),
         category: document.getElementById('productCategory').value,
         imageUrl: document.getElementById('productImage').value,
         description: document.getElementById('productDescription').value,
-        createdAt: new Date()
+        stock: Number(document.getElementById('productStock').value || 0),
+        createdAt: new Date(),
+        updatedAt: new Date()
     };
 
-    db.collection('products').add(productData)
+    // Validate data
+    if (!productData.name || !productData.price || !productData.imageUrl) {
+        alert('Please fill in all required fields');
+        return;
+    }
+
+    // Add to Firestore
+    firebase.firestore().collection('products').add(productData)
         .then(() => {
             alert('Product added successfully!');
+            document.getElementById('productForm').reset();
             document.getElementById('product-form').style.display = 'none';
             loadProducts();
+            loadInventoryStats();
         })
         .catch(error => {
+            console.error('Error adding product:', error);
             alert('Error adding product: ' + error.message);
         });
 }
@@ -131,42 +168,69 @@ function deleteProduct(productId) {
 function editProduct(productId) {
     db.collection('products').doc(productId).get()
         .then(doc => {
+            if (!doc.exists) {
+                alert('Product not found. It may have been deleted.');
+                return;
+            }
+
             const product = doc.data();
-            document.getElementById('productName').value = product.name;
-            document.getElementById('productPrice').value = product.price;
-            document.getElementById('productCategory').value = product.category;
-            document.getElementById('productImage').value = product.imageUrl;
-            document.getElementById('productDescription').value = product.description;
+            document.getElementById('productName').value = product.name || '';
+            document.getElementById('productPrice').value = product.price || '';
+            document.getElementById('productCategory').value = product.category || 'electronics';
+            document.getElementById('productImage').value = product.imageUrl || '';
+            document.getElementById('productDescription').value = product.description || '';
+            document.getElementById('productStock').value = product.stock || 0;
             
             showAddProductForm();
             // Update form submit handler to update instead of add
             const form = document.getElementById('productForm');
             form.onsubmit = (e) => updateProduct(e, productId);
+        })
+        .catch(error => {
+            console.error('Error loading product:', error);
+            alert('Error loading product details');
         });
 }
 
 // Update Product
-function updateProduct(event, productId) {
+async function updateProduct(event, productId) {
     event.preventDefault();
     
-    const productData = {
-        name: document.getElementById('productName').value,
-        price: Number(document.getElementById('productPrice').value),
-        category: document.getElementById('productCategory').value,
-        imageUrl: document.getElementById('productImage').value,
-        description: document.getElementById('productDescription').value,
-        updatedAt: new Date()
-    };
+    try {
+        // First check if the product exists
+        const productRef = db.collection('products').doc(productId);
+        const productDoc = await productRef.get();
+        
+        if (!productDoc.exists) {
+            alert('Product not found. It may have been deleted.');
+            return;
+        }
 
-    db.collection('products').doc(productId).update(productData)
-        .then(() => {
-            alert('Product updated successfully!');
-            document.getElementById('product-form').style.display = 'none';
-            loadProducts();
-        })
-        .catch(error => {
-            alert('Error updating product: ' + error.message);
-        });
+        const productData = {
+            name: document.getElementById('productName').value,
+            price: Number(document.getElementById('productPrice').value),
+            category: document.getElementById('productCategory').value,
+            imageUrl: document.getElementById('productImage').value,
+            description: document.getElementById('productDescription').value,
+            stock: Number(document.getElementById('productStock').value || 0),
+            updatedAt: new Date()
+        };
+
+        await productRef.update(productData);
+        
+        alert('Product updated successfully!');
+        document.getElementById('product-form').style.display = 'none';
+        loadProducts();
+        loadInventoryStats();
+        
+        // Reset form back to add mode
+        const form = document.getElementById('productForm');
+        form.onsubmit = handleProductSubmit;
+        
+    } catch (error) {
+        console.error('Error updating product:', error);
+        alert('Error updating product: ' + error.message);
+    }
 }
 
 // Load Orders
@@ -412,4 +476,136 @@ async function updateDashboardStats() {
     } catch (error) {
         console.error('Error updating dashboard stats:', error);
     }
+}
+
+// Load Inventory Statistics
+async function loadInventoryStats() {
+    try {
+        const snapshot = await db.collection('products').get();
+        let totalStock = 0;
+        let lowStock = 0;
+        let outOfStock = 0;
+
+        snapshot.forEach(doc => {
+            const product = doc.data();
+            const stockLevel = product.stock || 0;
+            
+            totalStock += stockLevel;
+            if (stockLevel === 0) outOfStock++;
+            if (stockLevel > 0 && stockLevel <= 10) lowStock++;
+        });
+
+        // Update dashboard stats
+        document.getElementById('total-stock').textContent = totalStock;
+        document.getElementById('low-stock').textContent = lowStock;
+        document.getElementById('out-of-stock').textContent = outOfStock;
+
+        updateProductsWithStock();
+
+    } catch (error) {
+        console.error('Error loading inventory stats:', error);
+    }
+}
+
+// Helper function to get stock status
+function getStockStatus(stock) {
+    if (stock === 0) {
+        return {
+            text: 'Out of Stock',
+            class: 'status-cancelled'
+        };
+    }
+    if (stock <= 10) {
+        return {
+            text: 'Low Stock',
+            class: 'status-pending'
+        };
+    }
+    return {
+        text: 'In Stock',
+        class: 'status-delivered'
+    };
+}
+
+// Update stock level
+async function updateStock(productId, currentStock) {
+    const newStock = prompt(`Enter new stock level (current: ${currentStock}):`, currentStock);
+    if (newStock === null) return;
+
+    const stock = parseInt(newStock);
+    if (isNaN(stock) || stock < 0) {
+        alert('Please enter a valid number');
+        return;
+    }
+
+    try {
+        await db.collection('products').doc(productId).update({
+            stock: stock,
+            updatedAt: new Date()
+        });
+        loadProducts();
+        loadInventoryStats();
+        alert('Stock updated successfully!');
+    } catch (error) {
+        console.error('Error updating stock:', error);
+        alert('Error updating stock');
+    }
+}
+
+// Update existing loadProducts function to include stock information
+function loadProducts() {
+    db.collection('products').get()
+        .then(snapshot => {
+            const productsList = document.getElementById('products-list');
+            productsList.innerHTML = '';
+            
+            snapshot.forEach(doc => {
+                const product = doc.data();
+                const stockStatus = getStockStatus(product.stock || 0);
+                const productElement = `
+                    <div class="product-item">
+                        <img src="${product.imageUrl}" alt="${product.name}">
+                        <h3>${product.name}</h3>
+                        <p>₹${product.price}</p>
+                        <p>Category: ${product.category}</p>
+                        <p class="stock-status ${stockStatus.class}">${stockStatus.text}</p>
+                        <div class="product-actions">
+                            <button onclick="updateStock('${doc.id}', ${product.stock || 0})" class="stock-btn">Update Stock</button>
+                            <button onclick="editProduct('${doc.id}')" class="edit-btn">Edit</button>
+                            <button onclick="deleteProduct('${doc.id}')" class="delete-btn">Delete</button>
+                        </div>
+                    </div>
+                `;
+                productsList.innerHTML += productElement;
+            });
+        });
+}
+
+// Update handleProductSubmit to include stock
+function handleProductSubmit(event) {
+    event.preventDefault();
+    
+    const productData = {
+        name: document.getElementById('productName').value,
+        price: Number(document.getElementById('productPrice').value),
+        category: document.getElementById('productCategory').value,
+        imageUrl: document.getElementById('productImage').value,
+        description: document.getElementById('productDescription').value,
+        stock: Number(document.getElementById('productStock').value || 0),
+        createdAt: new Date(),
+        updatedAt: new Date()
+    };
+
+    db.collection('products').add(productData)
+        .then(() => {
+            alert('Product added successfully!');
+            document.getElementById('productForm').reset();
+            document.getElementById('product-form').style.display = 'none';
+            loadProducts();
+            loadInventoryStats();
+        })
+        .catch(error => {
+            console.error('Error adding product:', error);
+            alert('Error adding product: ' + error.message);
+        });
 } 

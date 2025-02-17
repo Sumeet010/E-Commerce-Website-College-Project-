@@ -50,17 +50,14 @@
             <div id="products-section" class="admin-section">
                 <h2>Product Management</h2>
                 <button onclick="showAddProductForm()" class="submit-btn">Add New Product</button>
-                <div id="product-form" style="display: none;" class="admin-form">
-                    <h3>Add/Edit Product</h3>
-                    <form id="productForm" onsubmit="handleProductSubmit(event)">
+                <div id="product-form" class="admin-section" style="display: none;">
+                    <h2>Add New Product</h2>
+                    <form id="productForm" class="admin-form">
                         <div class="form-group">
                             <label for="productName">Product Name</label>
                             <input type="text" id="productName" required>
                         </div>
-                        <div class="form-group">
-                            <label for="productPrice">Price</label>
-                            <input type="number" id="productPrice" required>
-                        </div>
+
                         <div class="form-group">
                             <label for="productCategory">Category</label>
                             <select id="productCategory" required>
@@ -68,18 +65,30 @@
                                 <option value="fashion">Fashion</option>
                                 <option value="grocery">Grocery</option>
                                 <option value="home">Home & Furniture</option>
-                                <option value="toys">Toys & Kids</option>
                             </select>
                         </div>
+
+                        <div class="form-group">
+                            <label for="productPrice">Price</label>
+                            <input type="number" id="productPrice" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="productStock">Stock Quantity</label>
+                            <input type="number" id="productStock" min="0" value="0" required>
+                        </div>
+
                         <div class="form-group">
                             <label for="productImage">Image URL</label>
                             <input type="text" id="productImage" required>
                         </div>
+
                         <div class="form-group">
                             <label for="productDescription">Description</label>
                             <textarea id="productDescription" required></textarea>
                         </div>
-                        <button type="submit" class="submit-btn">Save Product</button>
+
+                        <button type="submit" class="submit-btn">Add Product</button>
                     </form>
                 </div>
                 <div id="products-list" class="product-grid">
