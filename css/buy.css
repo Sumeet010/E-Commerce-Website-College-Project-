@@ -160,4 +160,32 @@ button:hover {
     left: 6px;
     top: 22px;
     transform: rotate(-45deg);
+}
+
+.stock-info {
+    margin-top: 10px;
+    padding: 5px 10px;
+    border-radius: 4px;
+    display: inline-block;
+    font-weight: 500;
+}
+
+.stock-info.in-stock {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.stock-info.low-stock {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.stock-info.out-of-stock {
+    background-color: #f8d7da;
+    color: #842029;
+}
+
+button[type="submit"]:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
 } 
