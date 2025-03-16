@@ -70,12 +70,48 @@ background-color:rgb(255, 255, 255);
 
 }
 .nav{
-height: 80px;
-display: flex;
-justify-content: space-between;
-align-items: center;
-background-color:rgb(255, 255, 255);
-margin:0px 50px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: rgb(255, 255, 255);
+    margin: 0px 50px;
+}
+.nav ul {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    list-style: none;
+    flex: 1;
+    padding: 0;
+    gap: 30px;
+    margin: 0;
+}
+.nav ul li {
+    padding: 10px 15px;
+    text-align: center;
+}
+.nav ul li a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    transition: color 0.3s ease;
+    display: block;
+}
+.nav ul li a:hover {
+    color: #161880;
+}
+.logo {
+    font-size: 24px;
+    font-weight: 600;
+    color: #161880;
+    min-width: fit-content;
+}
+.auth-buttons {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    min-width: fit-content;
 }
 .main-text{
 margin:0;

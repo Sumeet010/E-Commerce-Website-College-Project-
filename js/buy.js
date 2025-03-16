@@ -6,10 +6,25 @@ document.addEventListener('DOMContentLoaded', async () => {
     const productPrice = urlParams.get('price');
     const productImageUrl = urlParams.get('imageUrl');
 
+    // Add debug logs
+    console.log('URL Parameters:', {
+        productId,
+        productName,
+        productPrice,
+        productImageUrl
+    });
+
+    // Check if we have the required data
+    if (!productName || !productPrice || !productImageUrl) {
+        console.error('Missing product information');
+        alert('Error: Product information is missing');
+        return;
+    }
+
     // Display product details
     document.getElementById('productName').textContent = productName;
     document.getElementById('productPrice').textContent = productPrice;
-    document.getElementById('productImage').style.backgroundImage = `url('${productImageUrl}')`;
+    document.getElementById('productImage').style.backgroundImage = `url('${decodeURIComponent(productImageUrl)}')`;
 
     // Fetch and display stock information
     try {

@@ -4,6 +4,9 @@ class Header extends HTMLElement {
     }
 
     connectedCallback() {
+        // Check if we're in the root directory or in a subdirectory
+        const isRoot = window.location.pathname === '/' || window.location.pathname.endsWith('index.html');
+
         const styles = `
             <style>
                 * {
@@ -57,8 +60,9 @@ class Header extends HTMLElement {
                 .auth-buttons {
                     display: flex;
                     align-items: center;
-                    gap: 10px;
+                    gap: 15px;
                     margin-left: auto;
+                    padding-right: 20px;
                 }
 
                 .auth-buttons button {
@@ -70,23 +74,32 @@ class Header extends HTMLElement {
                     transition: all 0.3s ease;
                 }
 
-                .login-btn {
-                    background-color: #161880;
-                    color: white;
+                .login-btn, .register-btn {
+                    text-decoration: none;
+                    padding: 8px 16px;
+                    border-radius: 4px;
+                    font-weight: 500;
+                    transition: all 0.3s ease;
                 }
 
-                .signup-btn {
-                    border-radius: 10px;
-                    background-color: #ff4444;
+                .login-btn {
+                    background-color: transparent;
+                    color: #161880;
+                    border: 1px solid #161880;
+                }
+
+                .register-btn {
+                    background-color: #161880;
                     color: white;
+                    border: none;
                 }
 
                 .login-btn:hover {
-                    background-color: #0f1060;
+                    background-color: #f0f0ff;
                 }
 
-                .signup-btn:hover {
-                    background-color: #ff2020;
+                .register-btn:hover {
+                    background-color: #0f1060;
                 }
 
                 .welcome-user {
@@ -98,6 +111,26 @@ class Header extends HTMLElement {
                 .welcome-user span {
                     color: #161880;
                     font-weight: 500;
+                }
+
+                .view-orders-btn, .cart-btn {
+                    padding: 8px 16px;
+                    background-color: #161880;
+                    color: white;
+                    border-radius: 5px;
+                    text-decoration: none;
+                    font-size: 14px;
+                    transition: background-color 0.3s ease;
+                }
+
+                .view-orders-btn:hover, .cart-btn:hover {
+                    background-color: #0f0f60;
+                }
+
+                .logout-btn {
+                    padding: 8px 16px;
+                    background-color: #ff4444;
+                    color: white;
                 }
 
                 @media (max-width: 768px) {
@@ -128,54 +161,59 @@ class Header extends HTMLElement {
                 <div class="navbar">
                     <nav>
                         <ul>
-                            <li>
-                                <a href="${window.location.pathname.includes('/pages/') ? '../' : ''}index.html">&#127968; Home</a>
-                                <a href="">&#128176; Deals</a>
-                                <a href="">&#128722; Shop</a>
-                                <a href="">&#127873; Today's offer</a>
-                            </li>
+                            <li><a href="${isRoot ? '' : '../'}index.html">Home</a></li>
+                            <li><a href="${isRoot ? 'pages/' : ''}Electronics.html">Electronics</a></li>
+                            <li><a href="${isRoot ? 'pages/' : ''}Fashion.html">Fashion</a></li>
+                            <li><a href="${isRoot ? 'pages/' : ''}Grocery.html">Grocery</a></li>
+                            <li><a href="${isRoot ? 'pages/' : ''}Home.html">Home</a></li>
+                            <li><a href="${isRoot ? 'pages/' : ''}Toys.html">Toys</a></li>
                         </ul>
                     </nav>
                     <div id="loginSection" class="auth-buttons">
-                        <!-- This will be dynamically updated -->
+                        <div id="orderButton" style="display: none;">
+                            <a href="${isRoot ? 'pages/' : ''}orders.html" class="view-orders-btn">View Orders</a>
+                        </div>
+                        <div id="cartButton" style="display: none;">
+                            <a href="${isRoot ? 'pages/' : ''}cart.html" class="cart-btn">Cart</a>
+                        </div>
+                        <div id="authSection">
+                            <!-- Auth buttons will be inserted here -->
+                        </div>
                     </div>
                 </div>
                 <div class="items">
                     <nav>
-                        <ul>
-                            <li>
-                                <a href="${window.location.pathname.includes('/pages/') ? '' : 'pages/'}Electronics.html">&#128241; Electronics</a>
-                                <a href="${window.location.pathname.includes('/pages/') ? '' : 'pages/'}Fashion.html">&#128087; Fashion</a>
-                                <a href="${window.location.pathname.includes('/pages/') ? '' : 'pages/'}Grocery.html">&#128722; Grocery</a>
-                                <a href="${window.location.pathname.includes('/pages/') ? '' : 'pages/'}Home.html">&#128716; Home & Furniture</a>
-                                <a href="${window.location.pathname.includes('/pages/') ? '' : 'pages/'}Toys.html">&#127879; Toys & Kid Accessories</a>
-                            </li>
-                        </ul>
+                        <a href="${isRoot ? 'pages/' : ''}Electronics.html">&#128241; Electronics</a>
+                        <a href="${isRoot ? 'pages/' : ''}Fashion.html">&#128087; Fashion</a>
+                        <a href="${isRoot ? 'pages/' : ''}Grocery.html">&#128722; Grocery</a>
+                        <a href="${isRoot ? 'pages/' : ''}Home.html">&#128716; Home & Furniture</a>
+                        <a href="${isRoot ? 'pages/' : ''}Toys.html">&#127879; Toys & Kid Accessories</a>
                     </nav>
                 </div>
             </div>
         `;
 
         // Check authentication state
-        firebase.auth().onAuthStateChanged((user) => {
-            const loginSection = document.getElementById('loginSection');
+        firebase.auth().onAuthStateChanged(user => {
+            const orderButton = this.querySelector('#orderButton');
+            const cartButton = this.querySelector('#cartButton');
+            const authSection = this.querySelector('#authSection');
+
             if (user) {
-                loginSection.innerHTML = `
+                orderButton.style.display = 'block';
+                cartButton.style.display = 'block';
+                authSection.innerHTML = `
                     <div class="welcome-user">
                         <span>Welcome, ${user.email}</span>
-                        <button class="signup-btn" onclick="handleLogout()">Logout</button>
+                        <button onclick="handleLogout()" class="logout-btn">Logout</button>
                     </div>
                 `;
             } else {
-                // Get the current path
-                const currentPath = window.location.pathname;
-                // Determine if we're in the pages directory
-                const isInPagesDir = currentPath.includes('/pages/');
-                // Set the login path accordingly
-                const loginPath = isInPagesDir ? './login.html' : './pages/login.html';
-                
-                loginSection.innerHTML = `
-                    <button class="login-btn" onclick="window.location.href='${loginPath}'">Login</button>
+                orderButton.style.display = 'none';
+                cartButton.style.display = 'none';
+                authSection.innerHTML = `
+                    <a href="${isRoot ? 'pages/' : ''}login.html" class="login-btn">Login</a>
+                    <a href="${isRoot ? 'pages/' : ''}register.html" class="register-btn">Register</a>
                 `;
             }
         });
