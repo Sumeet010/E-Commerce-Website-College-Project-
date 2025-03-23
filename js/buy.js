@@ -101,6 +101,34 @@ document.addEventListener('DOMContentLoaded', async () => {
             // Commit both operations
             await batch.commit();
 
+            // Send email confirmation
+            try {
+                const emailData = {
+                    orderId: orderRef.id,
+                    productName: productName,
+                    price: productPrice,
+                    customerName: formData.get('customerName'),
+                    email: formData.get('email'),
+                    phone: formData.get('phone'),
+                    address: formData.get('address')
+                };
+
+                const response = await fetch('http://localhost:3002/send-order-confirmation', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ orderData: emailData })
+                });
+
+                if (!response.ok) {
+                    console.error('Failed to send confirmation email');
+                }
+            } catch (emailError) {
+                console.error('Error sending confirmation email:', emailError);
+                // Continue with order success even if email fails
+            }
+
             // Show success modal
             const modal = document.getElementById('orderConfirmationModal');
             modal.style.display = 'flex';
