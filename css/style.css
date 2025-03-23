@@ -70,10 +70,10 @@ background-color:rgb(255, 255, 255);
 
 }
 .nav{
-    height: 80px;
-    display: flex;
+height: 80px;
+display: flex;
     align-items: center;
-    justify-content: space-between;
+justify-content: space-between;
     background-color: rgb(255, 255, 255);
     margin: 0px 50px;
 }
@@ -109,7 +109,7 @@ background-color:rgb(255, 255, 255);
 }
 .auth-buttons {
     display: flex;
-    align-items: center;
+align-items: center;
     gap: 15px;
     min-width: fit-content;
 }
@@ -207,14 +207,14 @@ width: 350px;
     border: 1px solid #161880;
     border-radius: 8px;
     width: 50%;
-    margin-top: 10px;
+margin-top: 10px;
 }
 
 .product-ads{
     height: 490px;
-    width: 30%;
+width: 30%;
     background-color: rgb(255, 255, 255);
-    margin-right: 0px;
+margin-right: 0px;
     overflow: hidden; /* Prevent image overflow */
     
 }
@@ -275,7 +275,7 @@ width: 95%;
 .card h3 {
     font-size: 1rem;
     font-weight: 600;
-    color: #333;
+color: #333;
     margin-bottom: 10px;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -291,13 +291,13 @@ width: 95%;
 .card p {
     color: #666;
     font-size: 0.9rem;
-    margin: 10px 0;
+margin: 10px 0;
     line-height: 1.4;
 }
 
 .old-price {
-    text-decoration: line-through;
-    color: #999;
+text-decoration: line-through;
+color: #999;
     margin-right: 10px;
 }
 
@@ -312,7 +312,7 @@ width: 95%;
     justify-content: center;
     align-items: center;
     text-align: center;
-    cursor: pointer;
+cursor: pointer;
     transition: all 0.3s ease;
     font-size: 12px;
     font-weight: 500;
@@ -330,7 +330,7 @@ width: 95%;
 }
 
 @media (max-width: 768px) {
-    .offer {
+.offer {
         grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
         gap: 15px;
         padding: 15px;
@@ -338,7 +338,7 @@ width: 95%;
 }
 
 @media (max-width: 480px) {
-    .offer {
+.offer {
         grid-template-columns: 1fr;
     }
 }
@@ -411,11 +411,11 @@ margin-left: 50px;
 width: 95%;
 }
 .banner2-3main{
-    margin-top: 100px;
-    width: 100%;
-    height: 440px;
-    display: flex;
-    justify-content: space-between;
+margin-top: 100px;
+width: 100%;
+height: 440px;
+display: flex;
+justify-content: space-between;
     margin-left: 50px;
 }
 .bannerad2{
@@ -425,7 +425,7 @@ width: 95%;
 .bannerad3{
     height: 100%;
     width: 60%;
-    margin-right: 80px;
+margin-right: 80px;
 }
 .bannerad2 img{
     height: 100%;
