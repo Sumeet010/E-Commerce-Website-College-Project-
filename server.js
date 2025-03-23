@@ -54,6 +54,34 @@ app.post('/send-order-confirmation', async (req, res) => {
     }
 });
 
+// Add a new endpoint to handle payment options
+app.post('/api/payment-options', (req, res) => {
+  try {
+    const { paymentMethod, orderDetails, upiDetails } = req.body;
+    
+    // Validate payment method
+    if (!['free-delivery', 'upi'].includes(paymentMethod)) {
+      return res.status(400).json({ error: 'Invalid payment method. Choose Free Delivery or UPI.' });
+    }
+    
+    // Handle UPI payment
+    if (paymentMethod === 'upi' && !upiDetails) {
+      return res.status(400).json({ error: 'UPI details are required for UPI payment.' });
+    }
+    
+
+    
+    return res.status(200).json({ 
+      success: true, 
+      message: `Order placed successfully with ${paymentMethod} payment option.`,
+      orderReference: `ORD-${Date.now()}`
+    });
+  } catch (error) {
+    console.error('Payment processing error:', error);
+    return res.status(500).json({ error: 'Failed to process payment option.' });
+  }
+});
+
 const PORT = process.env.PORT || 3002;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);

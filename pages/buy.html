@@ -28,8 +28,31 @@
             <input type="email" name="email" placeholder="Email" required>
             <input type="tel" name="phone" placeholder="Phone Number" required>
             <textarea name="address" placeholder="Shipping Address" required rows="4"></textarea>
+            
+            <!-- Payment Options Section -->
+            <div class="payment-options">
+                <h3>Payment Method</h3>
+                <div class="payment-option">
+                    <input type="radio" id="freeDelivery" name="paymentMethod" value="free-delivery" checked>
+                    <label for="freeDelivery">Cash on Delivery (Free)</label>
+                </div>
+                <div class="payment-option">
+                    <input type="radio" id="upiPayment" name="paymentMethod" value="upi">
+                    <label for="upiPayment">UPI Payment</label>
+                </div>
+                
+                <!-- UPI Details (initially hidden) -->
+                <div id="upiDetails" class="upi-details" style="display: none;">
+                    <div class="upi-qr-container">
+                        <img src="../images/upi-qr-code.jpg" alt="UPI QR Code" class="upi-qr-code">
+                    </div>
+                    <p class="upi-info">Scan this QR code to make payment</p>
+                    <input type="text" name="transactionId" id="transactionId" placeholder="Enter UPI Transaction ID after payment">
+                    <p class="upi-note">Note: Your order will be processed after payment verification</p>
+                </div>
+            </div>
+            
             <button type="submit">Place Order</button>
-          
         </form>
     </div>
 

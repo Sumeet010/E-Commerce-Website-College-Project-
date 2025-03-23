@@ -193,4 +193,68 @@ button[type="submit"]:disabled {
 .buy-btn:disabled {
     background-color: #cccccc;
     cursor: not-allowed;
-} 
+}
+
+/* Payment Options */
+.payment-options {
+    margin: 1rem 0;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.payment-options h3 {
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+.payment-option {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.8rem;
+}
+
+.payment-option input[type="radio"] {
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.payment-option label {
+    cursor: pointer;
+}
+
+.upi-details {
+    margin-top: 1rem;
+    padding: 1rem;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    border-left: 4px solid #4CAF50;
+}
+
+.upi-info {
+    margin: 0.8rem 0;
+    color: #333;
+}
+
+.upi-note {
+    font-size: 0.9rem;
+    color: #666;
+    font-style: italic;
+}
+
+/* UPI QR Code Styling */
+.upi-qr-container {
+    display: flex;
+    justify-content: center;
+    margin: 1rem 0;
+}
+
+.upi-qr-code {
+    width: 200px;
+    height: 200px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    background-color: white;
+}
+

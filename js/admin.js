@@ -247,6 +247,18 @@ async function loadOrders() {
             const order = doc.data();
             const orderDate = order.orderDate.toDate().toLocaleDateString();
             
+            // Determine payment status class
+            let paymentStatusClass = '';
+            if (order.paymentMethod === 'upi') {
+                if (order.paymentStatus === 'awaiting verification') {
+                    paymentStatusClass = 'status-pending';
+                } else if (order.paymentStatus === 'payment verified') {
+                    paymentStatusClass = 'status-delivered';
+                } else if (order.paymentStatus === 'payment failed') {
+                    paymentStatusClass = 'status-cancelled';
+                }
+            }
+            
             const row = `
                 <tr>
                     <td>${doc.id}</td>
@@ -263,6 +275,9 @@ async function loadOrders() {
                         </select>
                     </td>
                     <td>
+                        <span class="payment-method ${paymentStatusClass}">
+                            ${order.paymentMethod === 'free-delivery' ? 'COD' : 'UPI'}
+                        </span>
                         <button onclick="viewOrderDetails('${doc.id}')" class="view-btn">View Details</button>
                     </td>
                 </tr>
@@ -299,6 +314,25 @@ async function viewOrderDetails(orderId) {
         const orderDoc = await firebase.firestore().collection('orders').doc(orderId).get();
         const order = orderDoc.data();
 
+        // Create payment status options with the current status selected
+        const paymentStatusOptions = `
+            <select id="payment-status-select" class="status-${order.paymentStatus.replace(' ', '-')}">
+                <option value="awaiting verification" ${order.paymentStatus === 'awaiting verification' ? 'selected' : ''}>Awaiting Verification</option>
+                <option value="payment verified" ${order.paymentStatus === 'payment verified' ? 'selected' : ''}>Payment Verified</option>
+                <option value="payment failed" ${order.paymentStatus === 'payment failed' ? 'selected' : ''}>Payment Failed</option>
+                <option value="pending" ${order.paymentStatus === 'pending' ? 'selected' : ''}>Pending</option>
+            </select>
+            <button onclick="updatePaymentStatus('${orderId}')" class="view-btn">Update Payment</button>
+        `;
+
+        // Create transaction ID display for UPI payments
+        const transactionIdSection = order.paymentMethod === 'upi' && order.transactionId ? 
+            `<div class="transaction-section">
+                <p><strong>Transaction ID:</strong></p>
+                <div class="transaction-id">${order.transactionId}</div>
+                <p class="transaction-note">Verify this transaction ID in your UPI account</p>
+             </div>` : '';
+
         const modalContainer = document.getElementById('order-details-modal');
         modalContainer.innerHTML = `
             <div class="modal-content">
@@ -311,6 +345,15 @@ async function viewOrderDetails(orderId) {
                         <p><strong>Order Date:</strong> ${order.orderDate.toDate().toLocaleString()}</p>
                         <p><strong>Status:</strong> ${order.status}</p>
                         <p><strong>Total Amount:</strong> ₹${order.price}</p>
+                    </div>
+                    
+                    <div class="info-group">
+                        <h4>Payment Information</h4>
+                        <p><strong>Payment Method:</strong> ${order.paymentMethod === 'free-delivery' ? 'Cash on Delivery' : 'UPI Payment'}</p>
+                        ${transactionIdSection}
+                        <p><strong>Payment Status:</strong> 
+                            ${order.paymentMethod === 'upi' ? paymentStatusOptions : order.paymentStatus}
+                        </p>
                     </div>
                     
                     <div class="info-group">
@@ -608,4 +651,38 @@ function handleProductSubmit(event) {
             console.error('Error adding product:', error);
             alert('Error adding product: ' + error.message);
         });
+}
+
+// Add function to update payment status
+function updatePaymentStatus(orderId) {
+    const paymentStatusSelect = document.getElementById('payment-status-select');
+    const newPaymentStatus = paymentStatusSelect.value;
+    
+    firebase.firestore().collection('orders').doc(orderId).update({
+        paymentStatus: newPaymentStatus,
+        updatedAt: new Date()
+    })
+    .then(() => {
+        alert('Payment status updated successfully!');
+        // If payment is verified, we might want to update the order status as well
+        if (newPaymentStatus === 'payment verified') {
+            return firebase.firestore().collection('orders').doc(orderId).update({
+                status: 'processing'
+            });
+        }
+        // If payment failed, we might want to cancel the order
+        if (newPaymentStatus === 'payment failed') {
+            return firebase.firestore().collection('orders').doc(orderId).update({
+                status: 'cancelled'
+            });
+        }
+    })
+    .then(() => {
+        // Refresh the orders list
+        loadOrders();
+    })
+    .catch((error) => {
+        console.error("Error updating payment status: ", error);
+        alert('Error updating payment status');
+    });
 } 

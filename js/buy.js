@@ -47,6 +47,31 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error('Error fetching stock:', error);
     }
 
+    // Payment method toggle
+    const upiPaymentRadio = document.getElementById('upiPayment');
+    const freeDeliveryRadio = document.getElementById('freeDelivery');
+    const upiDetailsSection = document.getElementById('upiDetails');
+    const transactionIdField = document.getElementById('transactionId');
+
+    upiPaymentRadio.addEventListener('change', () => {
+        if (upiPaymentRadio.checked) {
+            upiDetailsSection.style.display = 'block';
+            transactionIdField.setAttribute('required', 'required');
+        }
+    });
+
+    freeDeliveryRadio.addEventListener('change', () => {
+        if (freeDeliveryRadio.checked) {
+            upiDetailsSection.style.display = 'none';
+            transactionIdField.removeAttribute('required');
+        }
+    });
+
+    // Initialize - make sure transaction ID is not required if COD is selected by default
+    if (freeDeliveryRadio.checked) {
+        transactionIdField.removeAttribute('required');
+    }
+
     // Handle form submission
     document.getElementById('checkoutForm').addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -76,9 +101,18 @@ document.addEventListener('DOMContentLoaded', async () => {
             // Create a batch write
             const batch = firebase.firestore().batch();
 
+            // Get form data
+            const formData = new FormData(e.target);
+            const paymentMethod = formData.get('paymentMethod');
+
+            // Validate transaction ID if UPI payment is selected
+            if (paymentMethod === 'upi' && !formData.get('transactionId')) {
+                alert('Please enter the UPI transaction ID after making payment');
+                return;
+            }
+
             // Create order
             const orderRef = firebase.firestore().collection('orders').doc();
-            const formData = new FormData(e.target);
             const orderData = {
                 productId: productId,
                 productName: productName,
@@ -88,8 +122,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                 email: formData.get('email'),
                 phone: formData.get('phone'),
                 address: formData.get('address'),
+                paymentMethod: paymentMethod,
+                paymentStatus: paymentMethod === 'free-delivery' ? 'confirmed' : 'awaiting verification',
+                transactionId: paymentMethod === 'upi' ? formData.get('transactionId') : null,
                 orderDate: new Date(),
-                status: 'pending'
+                status: paymentMethod === 'free-delivery' ? 'processing' : 'pending'
             };
             batch.set(orderRef, orderData);
 
@@ -110,7 +147,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                     customerName: formData.get('customerName'),
                     email: formData.get('email'),
                     phone: formData.get('phone'),
-                    address: formData.get('address')
+                    address: formData.get('address'),
+                    paymentMethod: paymentMethod === 'free-delivery' ? 'Cash on Delivery' : 'UPI Payment'
                 };
 
                 const response = await fetch('http://localhost:3002/send-order-confirmation', {
