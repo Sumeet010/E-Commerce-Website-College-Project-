@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electronics Products</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/Electronics.css">
+</head>
+<body>
+    <my-header></my-header>
+   
+    <div class="Doctors-Section">
+        <!-- Products will be loaded here dynamically -->
+    </div>
+
+    <!-- Firebase Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="../js/firebase-config.js"></script>
+    <script>
+        function displayProducts() {
+            console.log("Starting to fetch electronics products");
+            
+            firebase.firestore().collection('products')
+                .where('category', '==', 'toys')
+                .get()
+                .then((querySnapshot) => {
+                    console.log("Got products:", querySnapshot.size);
+                    const productsContainer = document.querySelector('.Doctors-Section');
+                    productsContainer.innerHTML = '';
+
+                    querySnapshot.forEach((doc) => {
+                        const product = doc.data();
+                        const productCard = `
+                            <div class="section-card1">
+                                <div class="Im1" style="background-image: url('${product.imageUrl}');"></div>
+                                <p class="name">${product.name}</p>
+                                <p class="description">${product.description || 'No description available'}</p>
+                                <p class="price">Price:<span>₹${product.price}</span></p>
+                                <div class="product-buttons">
+                                    <button class="add-to-cart-btn" onclick="addToCart('${doc.id}', '${product.name}', ${product.price}, '${product.imageUrl}')">Add to Cart</button>
+                                    <button class="buy-now-btn" onclick="checkLoginAndProceedToBuy('${doc.id}', '${product.name}', ${product.price}, '${product.imageUrl}')">Buy Now</button>
+                                </div>
+                            </div>
+                        `;
+                        productsContainer.innerHTML += productCard;
+                    });
+                })
+                .catch((error) => {
+                    console.error("Error getting products:", error);
+                });
+        }
+
+        function checkLoginAndProceedToBuy(productId, name, price, imageUrl) {
+            const user = firebase.auth().currentUser;
+            
+            if (user) {
+                // Encode the parameters to handle special characters
+                const params = new URLSearchParams({
+                    productId: productId,
+                    name: name,
+                    price: price,
+                    imageUrl: imageUrl
+                });
+                window.location.href = `buy.html?${params.toString()}`;
+            } else {
+                showLoginPrompt();
+            }
+        }
+
+        function showLoginPrompt() {
+            const loginPrompt = document.createElement('div');
+            loginPrompt.className = 'login-prompt';
+            loginPrompt.innerHTML = `
+                <div class="login-prompt-content">
+                    <h3>Login Required</h3>
+                    <p>Please login or create an account to continue shopping</p>
+                    <div class="login-prompt-buttons">
+                        <button onclick="window.location.href='login.html'">Login</button>
+                        <button onclick="window.location.href='register.html'">Create Account</button>
+                    </div>
+                    <button class="close-btn" onclick="closeLoginPrompt()">✕</button>
+                </div>
+            `;
+            document.body.appendChild(loginPrompt);
+        }
+
+        function closeLoginPrompt() {
+            const prompt = document.querySelector('.login-prompt');
+            if (prompt) {
+                prompt.remove();
+            }
+        }
+
+        async function addToCart(productId, name, price, imageUrl) {
+            const user = firebase.auth().currentUser;
+            
+            if (!user) {
+                showLoginPrompt();
+                return;
+            }
+
+            try {
+                // Check if item already exists in cart
+                const cartRef = firebase.firestore().collection('cart');
+                const existingItem = await cartRef
+                    .where('userId', '==', user.uid)
+                    .where('productId', '==', productId)
+                    .get();
+
+                if (!existingItem.empty) {
+                    // Update quantity if item exists
+                    const doc = existingItem.docs[0];
+                    await cartRef.doc(doc.id).update({
+                        quantity: firebase.firestore.FieldValue.increment(1)
+                    });
+                } else {
+                    // Add new item to cart
+                    await cartRef.add({
+                        userId: user.uid,
+                        productId: productId,
+                        name: name,
+                        price: price,
+                        imageUrl: imageUrl,
+                        quantity: 1,
+                        addedAt: new Date()
+                    });
+                }
+                
+                alert('Item added to cart!');
+            } catch (error) {
+                console.error('Error adding to cart:', error);
+                alert('Error adding item to cart');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', displayProducts);
+    </script>
+    <script src="../components/header.js"></script>
+</body>
+</html>
