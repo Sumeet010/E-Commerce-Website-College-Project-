@@ -18,7 +18,7 @@ class Header extends HTMLElement {
                 .navbar {
                     display: flex;
                     align-items: center;
-                    padding: 20px;
+                    
                     height: 50px;
                     width: 100%;
                     background-color: white;
@@ -27,6 +27,7 @@ class Header extends HTMLElement {
                 nav {
                     flex: 1;
                     text-align: center;
+                    
                 }
 
                 nav ul {
@@ -49,6 +50,7 @@ class Header extends HTMLElement {
                     background-color: #161880;
                     padding: 20px 25px;
                     width: 100%;
+                    
                 }
 
                 .items a {
@@ -113,7 +115,7 @@ class Header extends HTMLElement {
                     font-weight: 500;
                 }
 
-                .view-orders-btn, .cart-btn {
+                .view-orders-btn, .cart-btn, .profile-btn {
                     padding: 8px 16px;
                     background-color: #161880;
                     color: white;
@@ -123,7 +125,7 @@ class Header extends HTMLElement {
                     transition: background-color 0.3s ease;
                 }
 
-                .view-orders-btn:hover, .cart-btn:hover {
+                .view-orders-btn:hover, .cart-btn:hover, .profile-btn:hover {
                     background-color: #0f0f60;
                 }
 
@@ -205,6 +207,7 @@ class Header extends HTMLElement {
                 authSection.innerHTML = `
                     <div class="welcome-user">
                         <span>Welcome, ${user.email}</span>
+                        <a href="${isRoot ? 'pages/' : ''}profile.html" class="profile-btn">My Profile</a>
                         <button onclick="handleLogout()" class="logout-btn">Logout</button>
                     </div>
                 `;
