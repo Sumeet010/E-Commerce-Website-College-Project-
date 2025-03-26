@@ -42,8 +42,8 @@
                                 <p class="description">${product.description || 'No description available'}</p>
                                 <p class="price">Price:<span>₹${product.price}</span></p>
                                 <div class="product-buttons">
-                                    <button class="add-to-cart-btn" onclick="addToCart('${doc.id}', '${product.name}', ${product.price}, '${product.imageUrl}')">Add to Cart</button>
-                                    <button class="buy-now-btn" onclick="checkLoginAndProceedToBuy('${doc.id}', '${product.name}', ${product.price}, '${product.imageUrl}')">Buy Now</button>
+                                    <button class="add-to-cart-btn" onclick="addToCart('${doc.id}', '${product.name.replace(/'/g, "\\'")}', ${product.price}, '${product.imageUrl}')">Add to Cart</button>
+                                    <button class="buy-now-btn" onclick="checkLoginAndProceedToBuy('${doc.id}', '${product.name.replace(/'/g, "\\'")}', ${product.price}, '${encodeURIComponent(product.imageUrl)}')">Buy Now</button>
                                 </div>
                             </div>
                         `;
